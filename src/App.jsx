@@ -17,33 +17,30 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const RESET = 'reset';
 const SORT_APLHABET = 'alphabet';
 const SORT_LENGTH = 'length';
-const REVERSE = 'reverse';
+const INITIAL_STATE = '';
 
-const getPreparedGoods = (goods, action) => {
-  let preparedGoods = [...goods];
+const getPreparedGoods = (goods, action, reverse) => {
+  const preparedGoods = [...goods];
 
   if (action) {
     switch (action) {
-      case RESET:
-        return goods;
-
       case SORT_APLHABET:
-        return preparedGoods.sort();
+        preparedGoods.sort();
+        break;
 
       case SORT_LENGTH:
-        return preparedGoods.sort(
-          (good1, good2) => good1.length - good2.length,
-        );
-
-      case REVERSE:
-        return preparedGoods.reverse();
+        preparedGoods.sort((good1, good2) => good1.length - good2.length);
+        break;
 
       default:
-        return 0;
+        break;
     }
+  }
+
+  if (reverse) {
+    preparedGoods.reverse();
   }
 
   return preparedGoods;
@@ -58,24 +55,12 @@ const GoodList = ({ goods }) => {
 };
 
 export const App = () => {
-  const [sortAction, setSortAction] = useState(RESET);
-
-  const showReset = () => {
-    if (getPreparedGoods !== goodsFromServer) {
-      return (
-        <button
-          type="button"
-          className={classNames('button', 'is-info', {
-            'is-light': sortAction !== RESET,
-          })}
-          onClick={() => setSortAction(RESET)}
-        >
-          Reset
-        </button>
-      );
-    }
-
-    return null;
+  const [sortAction, setSortAction] = useState(INITIAL_STATE);
+  const [isReversed, setIsReversed] = useState(false);
+  const showReset = sortAction || isReversed;
+  const resetHandler = () => {
+    setSortAction(INITIAL_STATE);
+    setIsReversed(false);
   };
 
   return (
@@ -104,17 +89,29 @@ export const App = () => {
         <button
           type="button"
           className={classNames('button', 'is-info', {
-            'is-light': sortAction !== REVERSE,
+            'is-light': !isReversed,
           })}
-          onClick={() => setSortAction(REVERSE)}
+          onClick={() => setIsReversed(!isReversed)}
         >
           Reverse
         </button>
 
-        {showReset}
+        {showReset && (
+          <button
+            type="button"
+            className={classNames('button', 'is-info', {
+              'is-light': showReset,
+            })}
+            onClick={resetHandler}
+          >
+            Reset
+          </button>
+        )}
 
         <ul>
-          <GoodList goods={getPreparedGoods(goodsFromServer, sortAction)} />
+          <GoodList
+            goods={getPreparedGoods(goodsFromServer, sortAction, isReversed)}
+          />
         </ul>
       </div>
     </div>
