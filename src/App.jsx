@@ -21,7 +21,7 @@ const SORT_APLHABET = 'alphabet';
 const SORT_LENGTH = 'length';
 const INITIAL_STATE = '';
 
-const getPreparedGoods = (goods, action, reverse) => {
+const prepareGoods = (goods, action, reverse) => {
   const preparedGoods = [...goods];
 
   if (action) {
@@ -46,7 +46,7 @@ const getPreparedGoods = (goods, action, reverse) => {
   return preparedGoods;
 };
 
-const GoodList = ({ goods }) => {
+const RenderGoodList = ({ goods }) => {
   return goods.map(good => (
     <li key={good} data-cy="Good">
       {good}
@@ -58,7 +58,7 @@ export const App = () => {
   const [sortAction, setSortAction] = useState(INITIAL_STATE);
   const [isReversed, setIsReversed] = useState(false);
   const showReset = sortAction || isReversed;
-  const resetHandler = () => {
+  const handleReset = () => {
     setSortAction(INITIAL_STATE);
     setIsReversed(false);
   };
@@ -102,15 +102,15 @@ export const App = () => {
             className={classNames('button', 'is-info', {
               'is-light': showReset,
             })}
-            onClick={resetHandler}
+            onClick={handleReset}
           >
             Reset
           </button>
         )}
 
         <ul>
-          <GoodList
-            goods={getPreparedGoods(goodsFromServer, sortAction, isReversed)}
+          <RenderGoodList
+            goods={prepareGoods(goodsFromServer, sortAction, isReversed)}
           />
         </ul>
       </div>
