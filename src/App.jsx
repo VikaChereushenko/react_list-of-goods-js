@@ -99,9 +99,7 @@ export const App = () => {
         {showReset && (
           <button
             type="button"
-            className={classNames('button', 'is-info', {
-              'is-light': showReset,
-            })}
+            className={classNames('button', 'is-info')}
             onClick={handleReset}
           >
             Reset
